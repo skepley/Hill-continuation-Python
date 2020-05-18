@@ -85,8 +85,14 @@ class SaddleNode:
         def local_function(parameter):
             return self.call_grid(parameter)
 
-        minima = optimize.minimize(local_function, parameter, method='nelder-mead', options={'xatol': 1e-2})
-        return minima
+        minima = optimize.minimize(local_function, parameter, method='nelder-mead', options={'xatol': 1e-2,
+                                                                                             'return_all': True})
+
+        # minima = optimize.minimize(local_function, parameter, method='SLSQP', constraints = {}, options={
+        #                                                                                'return_all': True})
+        minimum_Hill_coef = local_function(minima.x)
+
+        return minima, minimum_Hill_coef
 
     def diff_zero_map(self, u, parameter):
         """Evaluate the derivative of the zero finding map. This is a matrix valued function of the form

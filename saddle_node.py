@@ -87,9 +87,27 @@ class SaddleNode:
 
         minima = optimize.minimize(local_function, parameter, method='nelder-mead', options={'xatol': 1e-2,
                                                                                              'return_all': True})
+        # Constraints for COBYLA, SLSQP are defined as a list of dictionaries. Each dictionary with fields:
+        #
+        # type str
+        # Constraint type: ‘eq’ for equality, ‘ineq’ for inequality.
+        #
+        # fun callable
+        # The function defining the constraint.
+        #
+        # jac callable, optional
+        # The Jacobian of fun (only for SLSQP).
+        #
+        # args sequence, optional
+        # Extra arguments to be passed to the function and Jacobian.
+        #
+        # possible example:
+        # constr1 = { "type" : 'eq'
+        #            "fun" : lambda x : np.sum(x) - 1
+        #            "jac" : lambda x : np.ones_like(x) }
+        # minima = optimize.minimize(local_function, parameter, jac = ''''derivatives''', method='SLSQP',
+        # constraints = [constr1], options={'return_all': True})
 
-        # minima = optimize.minimize(local_function, parameter, method='SLSQP', constraints = {}, options={
-        #                                                                                'return_all': True})
         minimum_Hill_coef = local_function(minima.x)
 
         return minima, minimum_Hill_coef

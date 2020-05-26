@@ -34,7 +34,8 @@ class SaddleNode:
                                         for j in
                                         range(equilibria.shape[1])]))  # return equilibria which converged
         hillCoefficients = np.concatenate(([sol.x[-1] for sol in saddleNodePoints], np.array([np.inf])))
-        return np.min(hillCoefficients)
+        full_parameter_list = [sol.x for sol in saddleNodePoints]
+        return np.min(hillCoefficients), full_parameter_list
 
     def unpack_components(self, u):
         """Unpack the input vector for a SaddleNode problem into 3 component vectors of the form (x, v, n)"""

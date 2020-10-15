@@ -3,7 +3,7 @@ A saddle-node bifurcation class and related functionality.
 
     Author: Shane Kepley
     email: shane.kepley@rutgers.edu
-    Date: 5/18/20; Last revision: 6/25/20
+    Date: 5/18/20; Last revision: 10/15/20
 """
 import numpy as np
 from scipy import optimize

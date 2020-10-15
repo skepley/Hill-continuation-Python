@@ -10,6 +10,21 @@ from scipy import optimize
 from hill_model import *
 
 
+def SN_candidates_from_bisection(equilibria):
+    """Given an array whose columns are equilibria, return the center of the midpoint between the two equilibria nearest
+    to one another."""
+    minDistance = np.inf  # initialize distance between nearest equilibrium pair
+    eqPair = (0, 0)  # initialize indices for nearest equilibrium pair
+    nEquilibria = np.shape(equilibria)[1]  # count columns of equilibrium data
+    for idx1 in range(nEquilibria):
+        for idx2 in range(idx1 + 1, nEquilibria):
+            eqDistance = np.linalg.norm(equilibria[:, idx1] - equilibria[:, idx2])
+            if eqDistance < minDistance:
+                minDistance = eqDistance
+                eqPair = (idx1, idx2)
+    return (equilibria[:, eqPair[0]] + equilibria[:, eqPair[1]]) / 2  # return midpoint between 2 closest equilibria
+
+
 class SaddleNode:
     """A constraint class for working with HillModels along surfaces of saddle-node bifurcations"""
 
@@ -37,7 +52,8 @@ class SaddleNode:
         g3 = self.phaseCondition(tangentVector)  # this is zero iff v satisfies the phase condition
         return ezcat(g1, g2, g3)
 
-    def find_saddle_node(self, freeParameterIndex, *parameter, equilibria=None, freeParameterValues=None, uniqueDigits=5, flag_return=0):
+    def find_saddle_node(self, freeParameterIndex, *parameter, equilibria=None, freeParameterValues=None,
+                         uniqueDigits=5, flag_return=0):
         """Attempt to find isolated saddle-node points along the direction of the parameter at the
         freeParameterIndex. All other parameters are fixed. This is done by Newton iteration starting at each
         equilibrium found for the initial parameter. The function returns only values of the free parameter or returns
